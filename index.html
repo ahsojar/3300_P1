@@ -148,7 +148,55 @@ var svg3 = d3.select("body").append("svg")
       .attr("transform", "rotate(-90)")
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-     
+  
+
+var schoolData = []; 
+var schools = ["cornell.json", "BU.json", "NAU.json", "NYU.json"]; 
+
+function getData(schools) {
+schools.forEach(function(item) {
+d3.json(item, function (error, data) {
+schoolData.push(printData(data));
+});
+});
+}
+
+function printData(school) {
+var accepted; 
+var rejected; 
+var attending; 
+for(var i = 1; i < school.length; i++) {
+if(i == 1) {
+accepted = school[i].data;
+} else if(i == 2) {
+attending = school[i].data;
+} else {
+rejected = school[i].data; 
+}
+}
+var school = {
+accepted : accepted, 
+rejected : rejected, 
+attending : attending
+};
+return school; 
+}
+
+function getCoordinates(schoolData, school, type) {
+//schoolData should be the array of data Obejcts
+//school should be index based, 0 = cornell, 3 = NYU
+//type is "accepted", "rejected", or "attending"
+coordinates = []
+var school = schoolData[school][type]; 
+school.forEach(function(item) {
+var plots = {
+gpa : item[1],
+sat : item[0]
+}
+coordinates.push(plots);
+});
+return coordinates
+}
 
 </script>
 
