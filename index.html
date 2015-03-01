@@ -7,17 +7,23 @@
 /* put a border around the svg element so we can see the coordinate system better. */
 body { font-family: "Lato"; 
 text-align:center;
-margin:0 auto;
+margin:20 auto;
 }
 div { margin: 40px; }
 svg{background-color: rgba(23,23,23,.1);
+  overflow: visible;
 }
 
 .circle{opacity: .4;}
-path{fill:#666;}
+path{fill:#666;
+z-index: 99999;
+}
+
+.tick{z-index: 9999999999;}
 
 path{width:3px;}
 
+text{z-index: 9999999;}
 #canvas{width:1200px;
 margin: 30 auto;
 }
@@ -27,6 +33,7 @@ margin: 30 auto;
 </head>
 <body>
 
+<h1>College Admissions of 4 Schools</h1>
 
 <!-- The SVG element will go in here -->
 <div id="canvas">
@@ -88,7 +95,7 @@ return coordinates
 }
 
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
+var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = 600 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -125,14 +132,14 @@ d3.json("cornell.json", function (error, data) {
 
 // FIRST GRAPH :NYU
  var svg = d3.select("#canvas").append("svg")
-    .attr("width", width + margin.left + margin.right)
+    .attr("width", width+ margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   // x-axis
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + (20+height) + ")")
       .call(xAxis2)
     .append("text")
       .attr("class", "label")
@@ -145,7 +152,8 @@ d3.json("cornell.json", function (error, data) {
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis2)
-      .attr("transform", "translate(" + width + ",0)")
+      .attr("transform", "translate(" +  (30+width) + ",0)")
+      .attr("z-index", '99999')
      
     .append("text")
       .attr("class", "label")
@@ -178,7 +186,6 @@ circles.attr("cx", function(d) { return xScale2(d.gpa) })
 
 
 //attending
-
 var circles = svg.selectAll("circle").data(getCoordinates(schoolData, 0, "attending"))
     .enter().append("circle");
 
@@ -202,7 +209,7 @@ var svg2 = d3.select("#canvas").append("svg")
   // x-axis
   svg2.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(-20," + height + ")")
+      .attr("transform", "translate(-20," + (20+height) + ")")
       .call(xAxis)
     .append("text")
       .attr("class", "label")
@@ -259,7 +266,7 @@ var svg3 = d3.select("#canvas").append("svg")
   svg3.append("g")
       .attr("class", "y axis")
       .call(yAxis)
-      .attr("transform", "translate(" + width + ",0)")
+      .attr("transform", "translate(" + (width+30) + ",-0)")
     .append("text")
       .attr("class", "label")
       .attr("y", height)
@@ -270,26 +277,26 @@ var svg3 = d3.select("#canvas").append("svg")
 
 
 
-//accepted
-var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "accepted"))
-    .enter().append("circle");
+// //accepted
+// var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "accepted"))
+//     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.gpa) })
-    .attr("cy", function(d) { return yScale(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "green")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale2(d.gpa) })
+//     .attr("cy", function(d) { return yScale(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "green")
+//     .attr("opacity", ".6"); 
 
 
-//rejected
-var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "rejected"))
-    .enter().append("circle");
+// //rejected
+// var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "rejected"))
+//     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.gpa) })
-    .attr("cy", function(d) { return yScale(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "#E65C5C")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale2(d.gpa) })
+//     .attr("cy", function(d) { return yScale(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "#E65C5C")
+//     .attr("opacity", ".6"); 
 
 
 //attending
