@@ -54,62 +54,40 @@ margin: 0 auto;
 
 <script>
 
-var schoolData = []; 
+var schoolStats = []; 
 var schools = ["cornell.json", "BU.json", "NAU.json", "NYU.json"]; 
 
-getData(schools);
+pullStats(schools);
 
-function getData(schools) {
-schools.forEach(function(item) {
-d3.json(item, function (error, data) {
-schoolData.push(printData(data));
-});
-});
+function pullStats(json_files) {
+	json_files.forEach(function(item) {
+		d3.json(item, function (error, data) {
+			for (var i = 1; i < data.length; i++) {
+				data[i].data.forEach(function(item) {
+					var point = {
+						SCHOOL : json_files[i-1],
+						SAT : item[0], 
+						GPA : item[1], 
+						TYPE : data[i].label
+					}
+					schoolStats.push(point);
+				});
+			}
+		});
+	});
 }
 
 
 
-function printData(school) {
-var accepted; 
-var rejected; 
-var attending; 
-for(var i = 1; i < school.length; i++) {
-if(i == 1) {
-accepted = school[i].data;
-} else if(i == 2) {
-attending = school[i].data;
-} else {
-rejected = school[i].data; 
-}
-}
-var school = {
-accepted : accepted, 
-rejected : rejected, 
-attending : attending
-};
-return school; 
-}
+var margin = {
+		top: 20, 
+		right: 20, 
+		bottom: 30, 
+		left: 40
+	},
 
-function getCoordinates(schoolData, school, type) {
-//schoolData should be the array of data Obejcts
-//school should be index based, 0 = cornell, 3 = NYU
-//type is "accepted", "rejected", or "attending"
-coordinates = []
-var school = schoolData[school][type]; 
-school.forEach(function(item) {
-var plots = {
-  gpa : item[1],
-  sat : item[0]
-}
-coordinates.push(plots);
-});
-return coordinates
-}
-
-
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+width = 600 - margin.left - margin.right,
+height = 500 - margin.top - margin.bottom;
 
 
 // setup x 
