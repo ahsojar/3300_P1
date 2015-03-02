@@ -114,39 +114,26 @@ border-right: 1px solid #ccc;
 
 </svg>
 <script>
-
-var schoolStats = []; 
-var schools = ["cornell.json", "BU.json", "NAU.json", "NYU.json"]; 
-
-pullStats(schools);
-
-function pullStats(json_files) {
-	json_files.forEach(function(items) {
-		d3.json(items, function (error, data) {
-        currentSchool = [];
-			for (var i = 1; i < data.length; i++) {
-				data[i].data.forEach(function(item) {
-					var point = {
-						SCHOOL : items,
-						SAT : item[0], 
-						GPA : item[1], 
-						TYPE : data[i].label
-					}
-					if(point.GPA >= 2.0 && point.SAT >= 200) {
-						currentSchool.push(point);	
-					}
-				});
-			}
-			var admits = 0; 
-			currentSchool.forEach(function(item) {
-				if(item.TYPE == "accepted" || item.TYPE == "attending") {
-					admits+=1; 
-				} 
-			});	
-			console.log(admits/currentSchool.length);
-			console.log(currentSchool[0].SCHOOL);
-      		schoolStats.push(currentSchool);
-		});
+var school = [];  
+function pullStats(json_file) {
+	school.length = 0;  
+	var currentSchool = [];
+	currentSchool.length = 0;
+	d3.json(json_file, function (error, data) {
+		for (var i = 1; i < data.length; i++) {
+			data[i].data.forEach(function(item) {
+				var point = {
+					SCHOOL : json_file,
+					SAT : item[0], 
+					GPA : item[1], 
+					TYPE : data[i].label
+				}
+				if(point.GPA >= 2.0 && point.SAT >= 200) {
+					currentSchool.push(point);	
+				}
+			});
+		}
+		another = currentSchool;
 	});
 }
 
