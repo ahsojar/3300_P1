@@ -63,12 +63,8 @@ border-right: 1px solid #ccc;
 
 
 }
-#cornell {
-	
-}
-#BU {
-	
-	
+#subtext {
+	font-size: 12px; 
 }
 
 
@@ -77,7 +73,7 @@ border-right: 1px solid #ccc;
 </head>
 <body>
 
-<h1>Student Admissions of 4 Colleges</h1>
+<h1>Self Reported Student Admissions of 4 Colleges</h1>
 
 <!-- The SVG element will go in here -->
 <svg id="legend" height="28" width="1000">
@@ -85,27 +81,36 @@ border-right: 1px solid #ccc;
   <circle cx="800" cy="20" r="5" fill="red"></circle>
   <circle cx="890" cy="20" r="5" fill="blue"></circle>
   <text text-anchor="middle" x="750" y="25" fill="black" font-family="Lato">Accepted</text>
-  <text text-anchor="middle" x="840" y="25" fill="black" font-family="Lato">Declined</text>
+  <text text-anchor="middle" x="840" y="25" fill="black" font-family="Lato">Rejected</text>
   <text text-anchor="middle" x="935" y="25" fill="black" font-family="Lato">Attending</text>
 </svg>
 
-<<<<<<< Updated upstream
 <svg  class="top" id="p1" height="80" width="1000" >
-=======
-<svg id="p1" height="80" width="1000" >
-	<img id="cornell" src="cornell.gif" height="100px">
->>>>>>> Stashed changes
-    <text text-anchor="middle" x="250" y="60" fill="black" font-family="Lato">Cornell University</text>
-    <img id="BU" src="BU.png" height="100px">
-	<text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Boston University</text>
+	<!-- <img src="cornell.gif" height="100px"> -->
+	<image xlink:href="cornell.gif" x="95" y="20" height="60px" width="60px"/>
+    <text text-anchor="middle" x="275" y="40" fill="black" font-family="Lato">Cornell University</text>
+    <text id="subtext" text-anchor="middle" x="275" y="60" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
+    <text id="subtext" text-anchor="middle" x="275" y="80" fill="black" font-family="Lato">Admit Rate: 14%</text>
+    <!-- <img src="BU.png" height="100px"> -->
+    <image xlink:href="BU.png" x="600" y="20" height="55px" width="55px"/>
+	<text text-anchor="middle" x="775" y="40" fill="black" font-family="Lato">Boston University</text>
+	<text id="subtext" text-anchor="middle" x="775" y="60" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
+    <text id="subtext" text-anchor="middle" x="775" y="80" fill="black" font-family="Lato">Admit Rate: 34%</text>
 </svg>
 
 <div id="canvas">
 </div>
 
 <svg  class="bottom" id="p1" height="80" width="1000" >
-  <text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Northern Arizona University</text>
-  <text text-anchor="middle" x="250" y="60" fill="black" font-family="Lato">New York University</text>
+	<image xlink:href="NAU.png" x="540" y="-20" height="60px" width="60px"/>
+  	<text text-anchor="middle" x="775" y="0" fill="black" font-family="Lato">Northern Arizona University</text>
+  	<text id="subtext" text-anchor="middle" x="775" y="20" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
+    <text id="subtext" text-anchor="middle" x="775" y="40" fill="black" font-family="Lato">Admit Rate: 91%</text>
+
+  	<image xlink:href="NYU.png" x="90" y="-20" height="60px" width="60px"/>
+  	<text text-anchor="middle" x="275" y="0" fill="black" font-family="Lato">New York University</text>
+  	<text id="subtext" text-anchor="middle" x="275" y="20" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
+  	<text id="subtext" text-anchor="middle" x="275" y="40" fill="black" font-family="Lato">Admit Rate: 34%</text>
 
 </svg>
 <script>
@@ -127,9 +132,19 @@ function pullStats(json_files) {
 						GPA : item[1], 
 						TYPE : data[i].label
 					}
-					currentSchool.push(point);
+					if(point.GPA >= 2.0 && point.SAT >= 200) {
+						currentSchool.push(point);	
+					}
 				});
 			}
+			var admits = 0; 
+			currentSchool.forEach(function(item) {
+				if(item.TYPE == "accepted" || item.TYPE == "attending") {
+					admits+=1; 
+				} 
+			});	
+			console.log(admits/currentSchool.length);
+			console.log(currentSchool[0].SCHOOL);
       		schoolStats.push(currentSchool);
 		});
 	});
