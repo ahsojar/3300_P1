@@ -62,62 +62,39 @@ h1{font-size:12pt;}
 
 <script>
 
-var schoolData = []; 
+var schoolStats = []; 
 var schools = ["cornell.json", "BU.json", "NAU.json", "NYU.json"]; 
 
-getData(schools);
+pullStats(schools);
 
-function getData(schools) {
-schools.forEach(function(item) {
-d3.json(item, function (error, data) {
-schoolData.push(printData(data));
-});
-});
-}
+function pullStats(json_files) {
+	json_files.forEach(function(item) {
+		d3.json(item, function (error, data) {
+        thisSchool=[]
+			for (var i = 1; i < data.length; i++) {
+				data[i].data.forEach(function(item) {
+					var point = {
+						SCHOOL : json_files[i-1],
+						SAT : item[0], 
+						GPA : item[1], 
+						TYPE : data[i].label
+					}
+					thisSchool.push(point);
+				});
+			}
+      schoolStats.push(thisSchool)
 
-
-
-function printData(school) {
-var accepted; 
-var rejected; 
-var attending; 
-for(var i = 1; i < school.length; i++) {
-if(i == 1) {
-accepted = school[i].data;
-} else if(i == 2) {
-attending = school[i].data;
-} else {
-rejected = school[i].data; 
-}
-}
-var school = {
-accepted : accepted, 
-rejected : rejected, 
-attending : attending
-};
-return school; 
+		});
+	});
 }
 
-function getCoordinates(schoolData, school, type) {
-//schoolData should be the array of data Obejcts
-//school should be index based, 0 = cornell, 3 = NYU
-//type is "accepted", "rejected", or "attending"
-coordinates = []
-var school = schoolData[school][type]; 
-school.forEach(function(item) {
-var plots = {
-  gpa : item[1],
-  sat : item[0]
-}
-coordinates.push(plots);
-});
-return coordinates
-}
+
 
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = 500 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
+
 
 
 // setup x 
@@ -184,36 +161,41 @@ d3.json("cornell.json", function (error, data) {
       .text("Average SAT Score");
 
 //accepted
-var circles = svg.selectAll("circle").data(getCoordinates(schoolData, 0, "accepted"))
+var circles = svg.selectAll("circle").data(schoolStats[0])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.gpa) })
-    .attr("cy", function(d) { return yScale2(d.sat) })
+circles.attr("cx", function(d) { return xScale2(d.GPA) })
+    .attr("cy", function(d) { return yScale2(d.SAT) })
     .attr("r", function(d) { return 4 })
-    .attr("fill", "green")
+    .attr("fill", function(d) { 
+      if (d.TYPE=="accepted") return "green" 
+       if (d.TYPE=="rejected") return "red" 
+        if (d.TYPE=="attending") return "blue" 
+
+  })
     .attr("opacity", ".6"); 
 
 
-//rejected
-var circles = svg.selectAll("circle").data(getCoordinates(schoolData, 0, "rejected"))
-    .enter().append("circle");
+// //rejected
+// var circles = svg.selectAll("circle").data(schoolStats[0])
+//     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.gpa) })
-    .attr("cy", function(d) { return yScale2(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "#E65C5C")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale2(d.GPA) })
+//     .attr("cy", function(d) { return yScale2(d.SAT) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "#E65C5C")
+//     .attr("opacity", ".6"); 
 
 
-//attending
-var circles = svg.selectAll("circle").data(getCoordinates(schoolData, 0, "attending"))
-    .enter().append("circle");
+// //attending
+// var circles = svg.selectAll("circle").data(schoolStats[0])
+//     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.gpa) })
-    .attr("cy", function(d) { return yScale2(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "black")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale2(d.GPA) })
+//     .attr("cy", function(d) { return yScale2(d.SAT) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "black")
+//     .attr("opacity", ".6"); 
 
 
 
@@ -239,37 +221,43 @@ var svg2 = d3.select("#canvas").append("svg")
       .text("GPA");
 	  
 //accepted
-var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "accepted"))
-		.enter().append("circle");
-
-circles.attr("cx", function(d) { return xScale(d.gpa) })
-		.attr("cy", function(d) { return yScale2(d.sat) })
-		.attr("r", function(d) { return 4 })
-		.attr("fill", "green")
-    .attr("opacity", ".6"); 
-
-
-//rejected
-var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "rejected"))
+var circles = svg2.selectAll("circle").data(schoolStats[1])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale(d.gpa) })
-    .attr("cy", function(d) { return yScale2(d.sat) })
+circles.attr("cx", function(d) { return xScale(d.GPA) })
+    .attr("cy", function(d) { return yScale2(d.SAT) })
     .attr("r", function(d) { return 4 })
-    .attr("fill", "#E65C5C")
+    .attr("fill", function(d) { 
+      if (d.TYPE=="accepted") return "green" 
+       if (d.TYPE=="rejected") return "red" 
+        if (d.TYPE=="attending") return "blue" 
+
+  })
     .attr("opacity", ".6"); 
 
 
-//attending
 
-var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "attending"))
-    .enter().append("circle");
+// //rejected
+// var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "rejected"))
+//     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale(d.gpa) })
-    .attr("cy", function(d) { return yScale2(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "black")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale(d.gpa) })
+//     .attr("cy", function(d) { return yScale2(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "#E65C5C")
+//     .attr("opacity", ".6"); 
+
+
+// //attending
+
+// var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "attending"))
+//     .enter().append("circle");
+
+// circles.attr("cx", function(d) { return xScale(d.gpa) })
+//     .attr("cy", function(d) { return yScale2(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "black")
+//     .attr("opacity", ".6"); 
 
 
 
@@ -297,16 +285,20 @@ var svg3 = d3.select("#canvas").append("svg")
 
 
 
-// //accepted
-// var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "accepted"))
-//     .enter().append("circle");
+//accepted
+var circles = svg3.selectAll("circle").data(schoolStats[2])
+    .enter().append("circle");
 
-// circles.attr("cx", function(d) { return xScale2(d.gpa) })
-//     .attr("cy", function(d) { return yScale(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "green")
-//     .attr("opacity", ".6"); 
+circles.attr("cx", function(d) { return xScale2(d.GPA) })
+    .attr("cy", function(d) { return yScale(d.SAT) })
+    .attr("r", function(d) { return 4 })
+    .attr("fill", function(d) { 
+      if (d.TYPE=="accepted") return "green" 
+       if (d.TYPE=="rejected") return "red" 
+        if (d.TYPE=="attending") return "blue" 
 
+  })
+    .attr("opacity", ".6"); 
 
 // //rejected
 // var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "rejected"))
@@ -320,14 +312,14 @@ var svg3 = d3.select("#canvas").append("svg")
 
 
 //attending
-var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "attending"))
-    .enter().append("circle");
+// var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "attending"))
+//     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.gpa) })
-    .attr("cy", function(d) { return yScale(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "blue")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale2(d.gpa) })
+//     .attr("cy", function(d) { return yScale(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "blue")
+//     .attr("opacity", ".6"); 
 
 
 
@@ -341,36 +333,42 @@ circles.attr("cx", function(d) { return xScale2(d.gpa) })
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "accepted"))
+// var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "accepted"))
+//     .enter().append("circle");
+
+// circles.attr("cx", function(d) { return xScale(d.gpa) })
+//     .attr("cy", function(d) { return yScale(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "green")
+//     .attr("opacity", ".6"); 
+
+
+//accepted
+var circles = svg4.selectAll("circle").data(schoolStats[3])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale(d.gpa) })
-    .attr("cy", function(d) { return yScale(d.sat) })
+circles.attr("cx", function(d) { return xScale(d.GPA) })
+    .attr("cy", function(d) { return yScale(d.SAT) })
     .attr("r", function(d) { return 4 })
-    .attr("fill", "green")
+    .attr("fill", function(d) { 
+      if (d.TYPE=="accepted") return "green" 
+       if (d.TYPE=="rejected") return "red" 
+        if (d.TYPE=="attending") return "blue" 
+
+  })
     .attr("opacity", ".6"); 
 
 
-//rejected
-var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "rejected"))
-    .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale(d.gpa) })
-    .attr("cy", function(d) { return yScale(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "#E65C5C")
-    .attr("opacity", ".6"); 
+// //attending
+// var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "attending"))
+//     .enter().append("circle");
 
-
-//attending
-var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "attending"))
-    .enter().append("circle");
-
-circles.attr("cx", function(d) { return xScale(d.gpa) })
-    .attr("cy", function(d) { return yScale(d.sat) })
-    .attr("r", function(d) { return 4 })
-    .attr("fill", "blue")
-    .attr("opacity", ".6"); 
+// circles.attr("cx", function(d) { return xScale(d.gpa) })
+//     .attr("cy", function(d) { return yScale(d.sat) })
+//     .attr("r", function(d) { return 4 })
+//     .attr("fill", "blue")
+//     .attr("opacity", ".6"); 
 
       
 });
