@@ -22,11 +22,14 @@ h1{font-weight:300;
 
 div { margin: 40px; }
 
-svg{background-color: #E2E2CE;
+svg{
   overflow: visible;
 }
 
 #p1{ text-transform: uppercase;
+  font-size: 14pt;
+  background-color:#F3F3EB;
+  font-weight: 400;
 
 }
 
@@ -54,7 +57,7 @@ text{z-index: 9999999;}
 
 #canvas{width:1000px;
 margin: 0 auto;
-background-color: #E2E2CE;
+background-color: #F3F3EB;
 border-left: 1px solid #ccc;
 border-right: 1px solid #ccc;
 
@@ -148,32 +151,7 @@ d3.json("cornell.json", function (error, data) {
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  // x-axis
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + (20+height) + ")")
-      .call(xAxis2)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", 0)
-      .attr("y", -6)
-      .style("text-anchor", "start")
-      .text("GPA");
 
-  // y-axis
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis2)
-      .attr("transform", "translate(" +  (30+width) + ",0)")
-      .attr("z-index", '99999')
-     
-    .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Average SAT Score");
 
 //Cornell - Circles
 var circles = svg.selectAll("circle").data(schoolStats[0])
@@ -199,18 +177,6 @@ var svg2 = d3.select("#canvas").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-
-  // x-axis
-  svg2.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(-20," + (20+height) + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", width)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text("GPA");
 	  
 //BU - Circles
 var circles = svg2.selectAll("circle").data(schoolStats[1])
@@ -234,19 +200,6 @@ var svg3 = d3.select("#canvas").append("svg")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  svg3.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-      .attr("transform", "translate(" + (width+30) + ",-0)")
-    .append("text")
-      .attr("class", "label")
-      .attr("y", height)
-      .attr("transform", "rotate(-90)")
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-
-
 
 //NAU - Circles
 var circles = svg3.selectAll("circle").data(schoolStats[2])
@@ -284,6 +237,64 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
         if (d.TYPE=="attending") return "blue" 
 
   }).attr("opacity", ".4"); 
+
+
+
+
+//CREATE AXIS
+
+  // y-axis
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis2)
+      .attr("transform", "translate(" +  (30+width) + ",0)")
+      .attr("z-index", '99999')
+     
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Average SAT Score");
+
+  svg3.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .attr("transform", "translate(" + (width+30) + ",-0)")
+    .append("text")
+      .attr("class", "label")
+      .attr("x", height-570)
+      .attr("y", 6)
+      .attr("transform", "rotate(-90)")
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Average SAT Score");
+
+
+  // x-axis
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (20+height) + ")")
+      .call(xAxis2)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", 0)
+      .attr("y", -6)
+      .style("text-anchor", "start")
+      .text("GPA");
+
+  // x-axis
+  svg2.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(-20," + (20+height) + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("GPA");
 });
 </script>
 </body>
