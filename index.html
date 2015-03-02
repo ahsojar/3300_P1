@@ -15,6 +15,8 @@ background-color: #E2E2CE;
 
 .third,.fourth{background-color: transparent;}
 
+.axis{stroke-width:1px;}
+
 h1{font-weight:700;
   font-size: 16pt;
   margin-bottom: 5pt;
@@ -23,9 +25,17 @@ h1{font-weight:700;
 
 div { margin: 40px; }
 
+path{
+   stroke-width:2;
+   fill:transparent;
+   stroke:#666;
+}
+
+
 svg{
   overflow: visible;
 }
+
 
 #p1{ text-transform: uppercase;
   font-size: 14pt;
@@ -43,16 +53,13 @@ svg{
   border-top: none;}
 
 .circle{opacity: .4;}
-path{fill:#666;
-z-index: 99999;
-}
+
 
 .tick{z-index: 9999999999;
 font-size: 10pt;
 font-weight:400;
 }
 
-path{width:3px;}
 
 text{z-index: 9999999;}
 
@@ -99,13 +106,14 @@ margin: 0 auto;
 	<!-- <img src="cornell.gif" height="100px"> -->
 	<image xlink:href="cornell.gif" x="95" y="20" height="60px" width="60px"/>
     <text text-anchor="middle" x="275" y="40" fill="black" font-family="Lato">Cornell University</text>
-    <text id="subtext" text-anchor="middle" x="275" y="60" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
-    <text id="subtext" text-anchor="middle" x="275" y="80" fill="black" font-family="Lato">Admit Rate: 14%</text>
+    <text id="subtext" text-anchor="middle" x="275" y="60" fill="black" font-family="Lato">Self Reported Admit Rate: 42%</text>
+    <text id="subtext" text-anchor="middle" x="275" y="80" fill="black" font-family="Lato">2014 Offical Admit Rate: 14%</text>
     <!-- <img src="BU.png" height="100px"> -->
     <image xlink:href="BU.png" x="600" y="20" height="55px" width="55px"/>
 	<text text-anchor="middle" x="775" y="40" fill="black" font-family="Lato">Boston University</text>
-	<text id="subtext" text-anchor="middle" x="775" y="60" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
-    <text id="subtext" text-anchor="middle" x="775" y="80" fill="black" font-family="Lato">Admit Rate: 34%</text>
+
+	<text id="subtext" text-anchor="middle" x="775" y="60" fill="black" font-family="Lato">Self Reported Admit Rate: 83%</text>
+    <text id="subtext" text-anchor="middle" x="775" y="80" fill="black" font-family="Lato">2014 Offical Admit Rate: 34%</text>
 
 </svg>
 
@@ -115,13 +123,13 @@ margin: 0 auto;
 <svg  class="bottom" id="p1" height="80" width="1000" >
 	<image xlink:href="NAU.png" x="540" y="-20" height="60px" width="60px"/>
   	<text text-anchor="middle" x="775" y="0" fill="black" font-family="Lato">Northern Arizona University</text>
-  	<text id="subtext" text-anchor="middle" x="775" y="20" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
-    <text id="subtext" text-anchor="middle" x="775" y="40" fill="black" font-family="Lato">Admit Rate: 91%</text>
+  	<text id="subtext" text-anchor="middle" x="775" y="20" fill="black" font-family="Lato">Self Reported Admit Rate: 98%</text>
+    <text id="subtext" text-anchor="middle" x="775" y="40" fill="black" font-family="Lato">2013 Offical Admit Rate: 91%</text>
 
   	<image xlink:href="NYU.png" x="90" y="-20" height="60px" width="60px"/>
   	<text text-anchor="middle" x="275" y="0" fill="black" font-family="Lato">New York University</text>
-  	<text id="subtext" text-anchor="middle" x="275" y="20" fill="black" font-family="Lato">Self Reported Admit Rate: ?%</text>
-  	<text id="subtext" text-anchor="middle" x="275" y="40" fill="black" font-family="Lato">Admit Rate: 34%</text>
+  	<text id="subtext" text-anchor="middle" x="275" y="20" fill="black" font-family="Lato">Self Reported Admit Rate: 71%</text>
+  	<text id="subtext" text-anchor="middle" x="275" y="40" fill="black" font-family="Lato">2014 Offical Admit Rate: 34%</text>
 
 </svg>
 <script>
@@ -168,7 +176,7 @@ var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = 500 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-
+var svg, svg2, svg3, svg4;
 
 // setup x 
     var xScale = d3.scale.linear().domain([4.0,2.0]).range([0, width]), // value -> display
@@ -183,108 +191,92 @@ var margin = {top: 20, right: 30, bottom: 30, left: 40},
     yScale2 = d3.scale.linear().domain([800,200]).range([height, 0]), // value -> display
     yAxis2 = d3.svg.axis().scale(yScale2).orient("left");
 
-d3.json("cornell.json", function (error, data) {
-
 // Cornell 
- var svg = d3.select("#canvas").append("svg")
+function generateCornell() {
+ 	 svg = d3.select("#canvas").append("svg")
     .attr("width", width+ margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+  	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-//Cornell - Circles
-var circles = svg.selectAll("circle").data(schoolStats[0])
+	var circles = svg.selectAll("circle").data(schoolStats[0])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.GPA) })
+	circles.attr("cx", function(d) { return xScale2(d.GPA) })
     .attr("cy", function(d) { return yScale2(d.SAT) })
     .attr("r", function(d) { return 4 })
     .attr("fill", function(d) { 
       if (d.TYPE=="accepted") return "green" 
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
+  	}).attr("opacity", ".4"); 
+}
 
-  }).attr("opacity", ".4"); 
-
-
-
-//BU
-var svg2 = d3.select("#canvas").append("svg")
+function generateBU() {
+	 svg2 = d3.select("#canvas").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-
-  .append("g")
+  	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-	  
-//BU - Circles
-var circles = svg2.selectAll("circle").data(schoolStats[1])
+	var circles = svg2.selectAll("circle").data(schoolStats[1])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale(d.GPA) })
+	circles.attr("cx", function(d) { return xScale(d.GPA) })
     .attr("cy", function(d) { return yScale2(d.SAT) })
     .attr("r", function(d) { return 4 })
     .attr("fill", function(d) { 
       if (d.TYPE=="accepted") return "green" 
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
+  	}).attr("opacity", ".4"); 
+}
 
-  }).attr("opacity", ".4"); 
-
-
- //NAU
-var svg3 = d3.select("#canvas").append("svg")
+function generateNAU() {
+	 svg3 = d3.select("#canvas").append("svg")
     .attr("class","third")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+  	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-//NAU - Circles
-var circles = svg3.selectAll("circle").data(schoolStats[2])
+	var circles = svg3.selectAll("circle").data(schoolStats[2])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale2(d.GPA) })
+	circles.attr("cx", function(d) { return xScale2(d.GPA) })
     .attr("cy", function(d) { return yScale(d.SAT) })
     .attr("r", function(d) { return 4 })
     .attr("fill", function(d) { 
       if (d.TYPE=="accepted") return "green" 
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
+  	}).attr("opacity", ".4"); 
+}
 
-  }).attr("opacity", ".4"); 
-
-
-//NYU 
-  var svg4 = d3.select("#canvas").append("svg")
+function generateNYU() {
+  	 svg4 = d3.select("#canvas").append("svg")
     .attr("class", "fourth")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+  	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-//NYU - Circles
-var circles = svg4.selectAll("circle").data(schoolStats[3])
+	var circles = svg4.selectAll("circle").data(schoolStats[3])
     .enter().append("circle");
 
-circles.attr("cx", function(d) { return xScale(d.GPA) })
+	circles.attr("cx", function(d) { return xScale(d.GPA) })
     .attr("cy", function(d) { return yScale(d.SAT) })
     .attr("r", function(d) { return 4 })
     .attr("fill", function(d) { 
       if (d.TYPE=="accepted") return "green" 
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
+  	}).attr("opacity", ".4"); 
+}
 
-  }).attr("opacity", ".4"); 
-
-
-
-
-//CREATE AXIS
-
-  // y-axis
-  svg.append("g")
+function generateAxis() {
+	//y-axis
+  	svg.append("g")
       .attr("class", "y axis")
       .call(yAxis2)
       .attr("transform", "translate(" +  (38+width) + ",0)")
@@ -294,11 +286,11 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
       .attr("class", "label")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
-      .attr("dy", ".71em")
+      .attr("dy", ".6em")
       .style("text-anchor", "end")
       .text("Average SAT Score");
 
-  svg3.append("g")
+  	svg3.append("g")
       .attr("class", "y axis")
       .call(yAxis)
       .attr("transform", "translate(" + (width+38) + ",-0)")
@@ -307,13 +299,12 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
       .attr("x", height-570)
       .attr("y", 6)
       .attr("transform", "rotate(-90)")
-      .attr("dy", ".71em")
+      .attr("dy", ".6em")
       .style("text-anchor", "end")
       .text("Average SAT Score");
 
-
   // x-axis
-  svg.append("g")
+  	svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + (20+height) + ")")
       .call(xAxis2)
@@ -325,9 +316,10 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
       .text("GPA");
 
   // x-axis
-  svg2.append("g")
+  	svg2.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(-5," + (20+height) + ")")
+      .attr("stroke-width", "40px")
       .call(xAxis)
     .append("text")
       .attr("class", "label")
@@ -335,6 +327,15 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
       .attr("y", -6)
       .style("text-anchor", "end")
       .text("GPA");
+}
+
+d3.json("cornell.json", function (error, data) {
+	generateCornell();
+	generateBU();
+	generateNAU();
+	generateNYU();
+	
+	generateAxis();
 });
 </script>
 </body>
