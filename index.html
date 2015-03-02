@@ -68,13 +68,14 @@ var schools = ["cornell.json", "BU.json", "NAU.json", "NYU.json"];
 pullStats(schools);
 
 function pullStats(json_files) {
-	json_files.forEach(function(item) {
-		d3.json(item, function (error, data) {
-        thisSchool=[]
+	json_files.forEach(function(items) {
+		d3.json(items, function (error, data) {
+        thisSchool=[];
 			for (var i = 1; i < data.length; i++) {
 				data[i].data.forEach(function(item) {
+					console.log(i);
 					var point = {
-						SCHOOL : json_files[i-1],
+						SCHOOL : items,
 						SAT : item[0], 
 						GPA : item[1], 
 						TYPE : data[i].label
@@ -82,8 +83,7 @@ function pullStats(json_files) {
 					thisSchool.push(point);
 				});
 			}
-      schoolStats.push(thisSchool)
-
+      		schoolStats.push(thisSchool);
 		});
 	});
 }
