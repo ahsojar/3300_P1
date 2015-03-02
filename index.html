@@ -10,17 +10,33 @@ body { font-family: "Lato";
 text-align:center;
 margin:20 auto;
 font-weight: 300;
+background-color: #E2E2CE;
 }
 
+.third,.fourth{background-color: transparent;}
+
 h1{font-weight:300;
-  size: 12pt;
+  font-size: 16pt;
+  text-transform: uppercase;
 }
 
 div { margin: 40px; }
+
 svg{background-color: #E2E2CE;
   overflow: visible;
-    overflow-y: visible;
 }
+
+#p1{ text-transform: uppercase;
+
+}
+
+.top{
+  border: 1px solid #ccc;
+  border-bottom: none;}
+
+.bottom{
+  border: 1px solid #ccc;
+  border-top: none;}
 
 .circle{opacity: .4;}
 path{fill:#666;
@@ -29,41 +45,48 @@ z-index: 99999;
 
 .tick{z-index: 9999999999;
 font-size: 10pt;
+font-weight:400;
 }
 
 path{width:3px;}
 
 text{z-index: 9999999;}
+
 #canvas{width:1000px;
 margin: 0 auto;
+background-color: #E2E2CE;
+border-left: 1px solid #ccc;
+border-right: 1px solid #ccc;
+
+
 }
 
-h1{font-size:12pt; font-family: 'Lato';}
+
 
 </style>
 </head>
 <body>
 
-<h1>College Admissions of 4 Schools</h1>
+<h1>Student Admissions of 4 Colleges</h1>
 
 <!-- The SVG element will go in here -->
-<svg id="p1" height="80" width="1000">
-  <circle cx="710" cy="55" r="5" fill="green"></circle>
-  <circle cx="800" cy="55" r="5" fill="red"></circle>
-  <circle cx="890" cy="55" r="5" fill="blue"></circle>
-  <text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Accepted</text>
-  <text text-anchor="middle" x="840" y="60" fill="black" font-family="Lato">Declined</text>
-  <text text-anchor="middle" x="940" y="60" fill="black" font-family="Lato">Attending</text>
+<svg id="legend" height="28" width="1000">
+  <circle cx="710" cy="20" r="5" fill="green"></circle>
+  <circle cx="800" cy="20" r="5" fill="red"></circle>
+  <circle cx="890" cy="20" r="5" fill="blue"></circle>
+  <text text-anchor="middle" x="750" y="25" fill="black" font-family="Lato">Accepted</text>
+  <text text-anchor="middle" x="840" y="25" fill="black" font-family="Lato">Declined</text>
+  <text text-anchor="middle" x="935" y="25" fill="black" font-family="Lato">Attending</text>
 </svg>
 
-<svg id="p1" height="80" width="1000" >
+<svg  class="top" id="p1" height="80" width="1000" >
     <text text-anchor="middle" x="250" y="60" fill="black" font-family="Lato">Cornell University</text>
 	<text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Boston University</text>
 </svg>
 
 <div id="canvas"></div>
 
-<svg id="p1" height="80" width="1000" >
+<svg  class="bottom" id="p1" height="80" width="1000" >
   <text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Northern Arizona University</text>
   <text text-anchor="middle" x="250" y="60" fill="black" font-family="Lato">New York University</text>
 
@@ -206,6 +229,7 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
 
  //NAU
 var svg3 = d3.select("#canvas").append("svg")
+    .attr("class","third")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -241,6 +265,7 @@ circles.attr("cx", function(d) { return xScale2(d.GPA) })
 
 //NYU 
   var svg4 = d3.select("#canvas").append("svg")
+    .attr("class", "fourth")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
