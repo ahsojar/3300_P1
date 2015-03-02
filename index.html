@@ -152,7 +152,7 @@ function pullStats(json_file) {
 				}
 			});
 		}
-		another = currentSchool;
+		school = currentSchool;
 	});
 }
 
@@ -180,13 +180,16 @@ var svg, svg2, svg3, svg4;
 
 // Cornell 
 function generateCornell() {
+   
+   pullStats("cornell.json")
+
  	 svg = d3.select("#canvas").append("svg")
     .attr("width", width+ margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var circles = svg.selectAll("circle").data(schoolStats[0])
+	var circles = svg.selectAll("circle").data(school)
     .enter().append("circle");
 
 	circles.attr("cx", function(d) { return xScale2(d.GPA) })
@@ -200,13 +203,14 @@ function generateCornell() {
 }
 
 function generateBU() {
+   pullStats("BU.json")
 	 svg2 = d3.select("#canvas").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
-	var circles = svg2.selectAll("circle").data(schoolStats[1])
+	var circles = svg2.selectAll("circle").data(school)
     .enter().append("circle");
 
 	circles.attr("cx", function(d) { return xScale(d.GPA) })
@@ -220,6 +224,7 @@ function generateBU() {
 }
 
 function generateNAU() {
+   pullStats("NAU.json")
 	 svg3 = d3.select("#canvas").append("svg")
     .attr("class","third")
     .attr("width", width + margin.left + margin.right)
@@ -227,7 +232,7 @@ function generateNAU() {
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var circles = svg3.selectAll("circle").data(schoolStats[2])
+	var circles = svg3.selectAll("circle").data(school)
     .enter().append("circle");
 
 	circles.attr("cx", function(d) { return xScale2(d.GPA) })
@@ -241,14 +246,15 @@ function generateNAU() {
 }
 
 function generateNYU() {
-  	 svg4 = d3.select("#canvas").append("svg")
+    pullStats("NYU.json")
+  	svg4 = d3.select("#canvas").append("svg")
     .attr("class", "fourth")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	var circles = svg4.selectAll("circle").data(schoolStats[3])
+	var circles = svg4.selectAll("circle").data(school)
     .enter().append("circle");
 
 	circles.attr("cx", function(d) { return xScale(d.GPA) })
