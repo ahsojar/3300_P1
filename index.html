@@ -24,10 +24,11 @@ z-index: 99999;
 path{width:3px;}
 
 text{z-index: 9999999;}
-#canvas{width:1200px;
+#canvas{width:1000px;
 margin: 0 auto;
 }
 
+h1{font-size:12pt;}
 
 </style>
 </head>
@@ -44,17 +45,17 @@ margin: 0 auto;
   <circle cx="900" cy="55" r="8" fill="red"></circle>
   <circle cx="990" cy="55" r="8" fill="blue"></circle>
 
-  <text text-anchor="middle" x="850" y="60" fill="black" font-family="Palatino">Accepted</text>
-  <text text-anchor="middle" x="940" y="60" fill="black" font-family="Palatino">Declined</text>
-  <text text-anchor="middle" x="1040" y="60" fill="black" font-family="Palatino">Attending</text>
+  <text text-anchor="middle" x="850" y="60" fill="black" font-family="Lato">Accepted</text>
+  <text text-anchor="middle" x="940" y="60" fill="black" font-family="Lato">Declined</text>
+  <text text-anchor="middle" x="1040" y="60" fill="black" font-family="Lato">Attending</text>
 
 </svg>
 
 
 <div id="canvas">
 <svg id="p1" height="80" width="1200" >
-  <text text-anchor="middle" x="850" y="60" fill="black" font-family="Palatino">Boston Uversity</text>
-  <text text-anchor="middle" x="350" y="60" fill="black" font-family="Palatino">Boston Uversity</text>
+  <text text-anchor="middle" x="850" y="60" fill="black" font-family="Lato">Boston University</text>
+  <text text-anchor="middle" x="350" y="60" fill="black" font-family="Lato">Boston University</text>
 
 </svg>
 </div>
@@ -115,8 +116,8 @@ return coordinates
 
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 500 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
 
 // setup x 
