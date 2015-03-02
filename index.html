@@ -10,7 +10,7 @@ text-align:center;
 margin:20 auto;
 }
 div { margin: 40px; }
-svg{background-color: rgba(23,23,23,.1);
+svg{background-color: #E2E2CE;
   overflow: visible;
 }
 
@@ -28,7 +28,7 @@ text{z-index: 9999999;}
 margin: 0 auto;
 }
 
-h1{font-size:12pt;}
+h1{font-size:12pt; font-family: 'Lato';}
 
 </style>
 </head>
@@ -37,29 +37,27 @@ h1{font-size:12pt;}
 <h1>College Admissions of 4 Schools</h1>
 
 <!-- The SVG element will go in here -->
-<svg id="p1" height="80" width="1200" >
-
-  
-
-  <circle cx="810" cy="55" r="8" fill="green"></circle>
-  <circle cx="900" cy="55" r="8" fill="red"></circle>
-  <circle cx="990" cy="55" r="8" fill="blue"></circle>
-
-  <text text-anchor="middle" x="850" y="60" fill="black" font-family="Lato">Accepted</text>
-  <text text-anchor="middle" x="940" y="60" fill="black" font-family="Lato">Declined</text>
-  <text text-anchor="middle" x="1040" y="60" fill="black" font-family="Lato">Attending</text>
-
+<svg id="p1" height="80" width="1000">
+  <circle cx="710" cy="55" r="8" fill="green"></circle>
+  <circle cx="800" cy="55" r="8" fill="red"></circle>
+  <circle cx="890" cy="55" r="8" fill="blue"></circle>
+  <text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Accepted</text>
+  <text text-anchor="middle" x="840" y="60" fill="black" font-family="Lato">Declined</text>
+  <text text-anchor="middle" x="940" y="60" fill="black" font-family="Lato">Attending</text>
 </svg>
 
+<svg id="p1" height="80" width="1000" >
+    <text text-anchor="middle" x="250" y="60" fill="black" font-family="Lato">Cornell University</text>
+	<text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Boston University</text>
+</svg>
 
-<div id="canvas">
-<svg id="p1" height="80" width="1200" >
-  <text text-anchor="middle" x="850" y="60" fill="black" font-family="Lato">Boston University</text>
-  <text text-anchor="middle" x="350" y="60" fill="black" font-family="Lato">Boston University</text>
+<div id="canvas"></div>
+
+<svg id="p1" height="80" width="1000" >
+  <text text-anchor="middle" x="750" y="60" fill="black" font-family="Lato">Northern Arizona University</text>
+  <text text-anchor="middle" x="250" y="60" fill="black" font-family="Lato">New York University</text>
 
 </svg>
-</div>
-
 <script>
 
 var schoolStats = []; 
@@ -70,20 +68,19 @@ pullStats(schools);
 function pullStats(json_files) {
 	json_files.forEach(function(items) {
 		d3.json(items, function (error, data) {
-        thisSchool=[];
+        currentSchool = [];
 			for (var i = 1; i < data.length; i++) {
 				data[i].data.forEach(function(item) {
-					console.log(i);
 					var point = {
 						SCHOOL : items,
 						SAT : item[0], 
 						GPA : item[1], 
 						TYPE : data[i].label
 					}
-					thisSchool.push(point);
+					currentSchool.push(point);
 				});
 			}
-      		schoolStats.push(thisSchool);
+      		schoolStats.push(currentSchool);
 		});
 	});
 }
@@ -100,34 +97,19 @@ var margin = {top: 20, right: 30, bottom: 30, left: 40},
 // setup x 
     var xScale = d3.scale.linear().domain([4.0,2.0]).range([0, width]), // value -> display
     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-
 // setup y
-    var yScale = d3.scale.linear().domain([300,800]).range([height, 0]), // value -> display
+    var yScale = d3.scale.linear().domain([200,800]).range([height, 0]), // value -> display
     yAxis = d3.svg.axis().scale(yScale).orient("left");
-
-
-
-
-
-
-
-
+// setup x 
     xScale2 = d3.scale.linear().domain([2.0,4.0]).range([0, width]), // value -> display
     xAxis2 = d3.svg.axis().scale(xScale2).orient("bottom");
-
 // setup y
-    yScale2 = d3.scale.linear().domain([800,300]).range([height, 0]), // value -> display
+    yScale2 = d3.scale.linear().domain([800,200]).range([height, 0]), // value -> display
     yAxis2 = d3.svg.axis().scale(yScale2).orient("left");
 
-
-
-
-
-var cornell
 d3.json("cornell.json", function (error, data) {
 
-
-// FIRST GRAPH :NYU
+// Cornell 
  var svg = d3.select("#canvas").append("svg")
     .attr("width", width+ margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -160,7 +142,7 @@ d3.json("cornell.json", function (error, data) {
       .style("text-anchor", "end")
       .text("Average SAT Score");
 
-//accepted
+//Cornell - Circles
 var circles = svg.selectAll("circle").data(schoolStats[0])
     .enter().append("circle");
 
@@ -172,34 +154,11 @@ circles.attr("cx", function(d) { return xScale2(d.GPA) })
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
 
-  })
-    .attr("opacity", ".6"); 
-
-
-// //rejected
-// var circles = svg.selectAll("circle").data(schoolStats[0])
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale2(d.GPA) })
-//     .attr("cy", function(d) { return yScale2(d.SAT) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "#E65C5C")
-//     .attr("opacity", ".6"); 
-
-
-// //attending
-// var circles = svg.selectAll("circle").data(schoolStats[0])
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale2(d.GPA) })
-//     .attr("cy", function(d) { return yScale2(d.SAT) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "black")
-//     .attr("opacity", ".6"); 
+  }).attr("opacity", ".4"); 
 
 
 
-//2nd GRAPH
+//BU
 var svg2 = d3.select("#canvas").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -220,7 +179,7 @@ var svg2 = d3.select("#canvas").append("svg")
       .style("text-anchor", "end")
       .text("GPA");
 	  
-//accepted
+//BU - Circles
 var circles = svg2.selectAll("circle").data(schoolStats[1])
     .enter().append("circle");
 
@@ -232,45 +191,16 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
 
-  })
-    .attr("opacity", ".6"); 
+  }).attr("opacity", ".4"); 
 
 
-
-// //rejected
-// var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "rejected"))
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale(d.gpa) })
-//     .attr("cy", function(d) { return yScale2(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "#E65C5C")
-//     .attr("opacity", ".6"); 
-
-
-// //attending
-
-// var circles = svg2.selectAll("circle").data(getCoordinates(schoolData, 1, "attending"))
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale(d.gpa) })
-//     .attr("cy", function(d) { return yScale2(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "black")
-//     .attr("opacity", ".6"); 
-
-
-
-
- //GRAPH 3: School 3:
+ //NAU
 var svg3 = d3.select("#canvas").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
- 
-  // y-axis
   svg3.append("g")
       .attr("class", "y axis")
       .call(yAxis)
@@ -278,14 +208,13 @@ var svg3 = d3.select("#canvas").append("svg")
     .append("text")
       .attr("class", "label")
       .attr("y", height)
-
       .attr("transform", "rotate(-90)")
       .attr("dy", ".71em")
       .style("text-anchor", "end")
 
 
 
-//accepted
+//NAU - Circles
 var circles = svg3.selectAll("circle").data(schoolStats[2])
     .enter().append("circle");
 
@@ -297,53 +226,17 @@ circles.attr("cx", function(d) { return xScale2(d.GPA) })
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
 
-  })
-    .attr("opacity", ".6"); 
-
-// //rejected
-// var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "rejected"))
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale2(d.gpa) })
-//     .attr("cy", function(d) { return yScale(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "#E65C5C")
-//     .attr("opacity", ".6"); 
+  }).attr("opacity", ".4"); 
 
 
-//attending
-// var circles = svg3.selectAll("circle").data(getCoordinates(schoolData, 2, "attending"))
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale2(d.gpa) })
-//     .attr("cy", function(d) { return yScale(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "blue")
-//     .attr("opacity", ".6"); 
-
-
-
-
-
-// GRAPH 4
+//NYU 
   var svg4 = d3.select("#canvas").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-// var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "accepted"))
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale(d.gpa) })
-//     .attr("cy", function(d) { return yScale(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "green")
-//     .attr("opacity", ".6"); 
-
-
-//accepted
+//NYU - Circles
 var circles = svg4.selectAll("circle").data(schoolStats[3])
     .enter().append("circle");
 
@@ -355,29 +248,9 @@ circles.attr("cx", function(d) { return xScale(d.GPA) })
        if (d.TYPE=="rejected") return "red" 
         if (d.TYPE=="attending") return "blue" 
 
-  })
-    .attr("opacity", ".6"); 
-
-
-
-// //attending
-// var circles = svg4.selectAll("circle").data(getCoordinates(schoolData, 3, "attending"))
-//     .enter().append("circle");
-
-// circles.attr("cx", function(d) { return xScale(d.gpa) })
-//     .attr("cy", function(d) { return yScale(d.sat) })
-//     .attr("r", function(d) { return 4 })
-//     .attr("fill", "blue")
-//     .attr("opacity", ".6"); 
-
-      
+  }).attr("opacity", ".4"); 
 });
-
-
-
-
 </script>
-
 </body>
 </html>
 
