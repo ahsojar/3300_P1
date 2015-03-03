@@ -135,11 +135,14 @@ margin-bottom: 5px;
 
 </svg>
 <script>
+//Arrays for each school
 var cornell = [];
 var bu = [];
 var nyu = [];
 var nau = [];  
 
+//pullStats reads from the json file and pulls critical information like SAT, GPA, Type of applicant
+//and name of file. We restrict the dataset to be inclusive within a 200 SAT score and 2.0 GPA. 
 function pullStats(json_file, result) {
 	d3.json(json_file, function (error, data) {
 		for (var i = 1; i < data.length; i++) {
@@ -158,6 +161,7 @@ function pullStats(json_file, result) {
 	});
 }
 
+//Calling pullstats on json files and arrays. 
 pullStats("cornell.json", cornell);
 pullStats("BU.json", bu);
 pullStats("NYU.json", nyu);
